@@ -141,10 +141,13 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideRegion(vector<st
     for (const auto& elem : bs) {
         uint64_t root = unionFind.find(elem);
         classes[root].insert(elem);
+        cout<<"DEBUG: "<<root<<".insert("<<elem<<")\n";
     }
-    std::vector<std::unordered_set<uint64_t>> parts(classes.size());
+//    (classes.size())
+    std::vector<std::unordered_set<uint64_t>> parts;
     for (const auto& entry : classes) {
         parts.push_back(entry.second);
+        cout<<"DEBUG: "<<"parts.push_back entry size: "<<entry.second.size()<<"\n";
     }
 
     // 打印分区
