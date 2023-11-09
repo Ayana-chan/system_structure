@@ -13,11 +13,11 @@ using namespace std;
 void MainController::start() {
     inputMatrix();
     transToReachableMatrix();
-    cout << "1. Divide Region\n";
+    cout << "1. Divide Parts\n";
     vector<unordered_set<uint64_t>> rs_vec;
     vector<uint64_t> bs;
     calculateBeginSet(rs_vec, bs);
-    divideRegion(rs_vec, bs);
+    divideParts(rs_vec, bs);
 }
 
 void MainController::inputMatrix() {
@@ -116,7 +116,7 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
     cout << "\n";
 }
 
-std::vector<std::unordered_set<uint64_t>> MainController::divideRegion(vector<std::unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
+std::vector<std::unordered_set<uint64_t>> MainController::divideParts(vector<std::unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
     // 建立并查集
     UnionFind unionFind;
     for (auto &elem: bs) {
@@ -137,17 +137,18 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideRegion(vector<st
     }
 
     // 生成分区
-    std::unordered_map<uint64_t, std::unordered_set<uint64_t>> classes;
+    std::unordered_map<uint64_t, std::unordered_set<uint64_t>> classes_map;
     for (const auto& elem : bs) {
         uint64_t root = unionFind.find(elem);
-        classes[root].insert(elem);
-        cout<<"DEBUG: "<<root<<".insert("<<elem<<")\n";
+        auto &aim_rs = rs_vec[elem];
+        classes_map[root].insert(aim_rs.begin(),aim_rs.end());
+//        cout<<"DEBUG: "<<root<<".insert("<<elem<<")\n";
     }
-//    (classes.size())
+
     std::vector<std::unordered_set<uint64_t>> parts;
-    for (const auto& entry : classes) {
+    for (const auto& entry : classes_map) {
         parts.push_back(entry.second);
-        cout<<"DEBUG: "<<"parts.push_back entry size: "<<entry.second.size()<<"\n";
+//        cout<<"DEBUG: "<<"parts.push_back entry size: "<<entry.second.size()<<"\n";
     }
 
     // 打印分区
