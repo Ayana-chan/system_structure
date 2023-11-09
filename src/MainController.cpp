@@ -54,6 +54,9 @@ void MainController::transToReachableMatrix() {
 }
 
 void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, unordered_set<uint64_t> &bs) {
+    rs_vec.resize(matrix.get_size());
+    bs.clear();
+
     cout << "--------\n";
     for (uint64_t s = 0; s < matrix.get_size(); s++) {
         auto& rs = rs_vec[s];
