@@ -17,11 +17,10 @@ void MainController::start() {
     cout << "*** 1. Divide Parts\n";
     calculateBeginSet();
     vector<unordered_set<uint64_t>> parts = divideParts();
-    matrix.printBlockDiagonalMatrix(parts);
+    printPartDividedMatrix(parts);
 
     cout << "*** 2. Divide Levels\n";
-    //每个part都是一个L队列，每个L都是一个集合
-    auto level_vec = vector<vector<unordered_set<uint64_t>>>(parts.size());
+    level_vec.resize(parts.size());
     for (int i = 0; i < parts.size(); i++) {
         cout<<"-- Part "<<i<<"'s Level: \n";
         divideLevel(level_vec[i], parts[i]);
@@ -222,4 +221,33 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
         levels.emplace_back(move(new_level));
         ++level_count;
     }
+}
+
+
+void MainController::printPartDividedMatrix(vector<unordered_set<uint64_t>> &parts) {
+    cout << "Block Diagonal Matrix: \n";
+    cout << "\\  ";
+    for (auto &pc: parts) {
+        for (auto &nodec: pc) {
+            cout << nodec << " ";
+        }
+    }
+    cout << "\n";
+
+    for (auto &pr: parts) {
+        for (auto &noder: pr) {
+            cout << noder << " |";
+            for (auto &pc: parts) {
+                for (auto &nodec: pc) {
+                    cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                }
+            }
+            cout << "\n";
+        }
+    }
+    cout << "\n";
+}
+
+void MainController::printLevelDividedMatrix() {
+
 }

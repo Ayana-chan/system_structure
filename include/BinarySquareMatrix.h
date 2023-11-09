@@ -34,12 +34,6 @@ public:
 
     std::unordered_set<uint64_t> calculateCs_straight(const uint64_t &s);
 
-    /**
-     * 打印分区后的矩阵，是块对角矩阵
-     * @param parts
-     */
-    void printBlockDiagonalMatrix(std::vector<std::unordered_set<uint64_t>> &parts);
-
     std::vector<char> &operator[](size_t index) {
         if (index >= data.size()) {
             throw std::out_of_range("Index out of range");

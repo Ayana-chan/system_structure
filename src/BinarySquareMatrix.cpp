@@ -27,30 +27,6 @@ void BinarySquareMatrix::intoReachableMatrix() {
     }
 }
 
-void BinarySquareMatrix::printBlockDiagonalMatrix(vector<unordered_set<uint64_t>> &parts) {
-    cout << "Block Diagonal Matrix: \n";
-    cout << "\\  ";
-    for (auto &pc: parts) {
-        for (auto &nodec: pc) {
-            cout << nodec << " ";
-        }
-    }
-    cout << "\n";
-
-    for (auto &pr: parts) {
-        for (auto &noder: pr) {
-            cout << noder << " |";
-            for (auto &pc: parts) {
-                for (auto &nodec: pc) {
-                    cout << static_cast<int>(data[noder][nodec]) << " ";
-                }
-            }
-            cout << "\n";
-        }
-    }
-    cout << "\n";
-}
-
 unordered_set<uint64_t> BinarySquareMatrix::calculateRs(const uint64_t &s) {
     unordered_set<uint64_t> rs;
     for (int i = 0; i < get_size(); i++) {
@@ -80,5 +56,6 @@ unordered_set<uint64_t> BinarySquareMatrix::calculateCs_straight(const uint64_t 
     }
     return cs;
 }
+
 
 
