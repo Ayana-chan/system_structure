@@ -14,17 +14,19 @@ void MainController::start() {
     inputMatrix();
     transToReachableMatrix();
 
-    cout << "1. Divide Parts\n";
+    cout << "*** 1. Divide Parts\n";
     calculateBeginSet();
     vector<unordered_set<uint64_t>> parts = divideParts();
     matrix.printBlockDiagonalMatrix(parts);
 
-    cout << "2. Divide Levels\n";
+    cout << "*** 2. Divide Levels\n";
     //每个part都是一个L队列，每个L都是一个集合
     auto level_vec = vector<vector<unordered_set<uint64_t>>>(parts.size());
     for (int i = 0; i < parts.size(); i++) {
+        cout<<"-- Part "<<i<<"'s Level: \n";
         divideLevel(level_vec[i], parts[i]);
     }
+    cout<<"\n";
 }
 
 void MainController::inputMatrix() {
@@ -160,14 +162,51 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts() {
 }
 
 void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, const unordered_set<uint64_t> &part) {
-
-
+    int level_count = 0;
     // 尚未被划分等级的点
-    vector<uint64_t> discarded;
-    while (discarded.size() < part.size()) {
-        unordered_set<uint64_t> new_level;
+    auto rest_node = part;
 
+    while (!rest_node.empty()) {
+        cout<<"DEBUG: calculate level "<<level_count<<"\n";
+        unordered_set<uint64_t> new_level;
+        // 找出所有cs=rs（无视discarded和非本part的点）的点
+        for (auto &elem: part) {
+            auto cs = cs_vec[elem];
+            auto rs = rs_vec[elem];
+
+            //剔除不考虑的点
+            auto it = cs.begin();
+            while(it!=cs.end()){
+                if(rest_node.count(*it) == 0){
+                    it = cs.erase(it);
+                }else{
+                    it = next(it);
+                }
+            }
+            it = rs.begin();
+            while(it!=rs.end()){
+                if(rest_node.count(*it) == 0){
+                    it = rs.erase(it);
+                }else{
+                    it = next(it);
+                }
+            }
+
+            //检验相等
+            if(cs == rs){
+                new_level.insert(elem);
+                rest_node.erase(elem);
+            }
+        }
+
+        // 打印
+        cout<<"Level "<<level_count<<": ";
+        for(auto& elem: new_level){
+            cout<<elem<<" ";
+        }
+        cout<<"\n";
 
         levels.emplace_back(move(new_level));
+        ++level_count;
     }
 }
