@@ -17,12 +17,18 @@ private:
     /**
      * 输入矩阵数据，将矩阵构造到成员变量中
      */
-    void input_matrix();
+    void inputMatrix();
 
     /**
      * 转为邻接矩阵
      */
-    void trans_to_reachable_matrix();
+    void transToReachableMatrix();
+
+    /**
+     * 计算起始集B(S)
+     * @return B(S)
+     */
+    std::vector<uint64_t> calculateBeginSet();
 };
 
 

@@ -5,15 +5,18 @@
 #include "MainController.h"
 
 #include <iostream>
+#include <unordered_set>
 
 using namespace std;
 
 void MainController::start() {
-    input_matrix();
-    trans_to_reachable_matrix();
+    inputMatrix();
+    transToReachableMatrix();
+    cout << "1. Divide Region\n";
+    calculateBeginSet();
 }
 
-void MainController::input_matrix() {
+void MainController::inputMatrix() {
     cout << "Input Matrix.\n";
     cout << "Example: node_num edge_num from1 to1 from2 to2\n";
     cout << "Notice: index start with 0\n";
@@ -36,15 +39,75 @@ void MainController::input_matrix() {
 
     //打印矩阵
     cout << "Get Matrix: \n";
-    cout<< matrix;
+    cout << matrix;
     cout << "\n";
 }
 
-void MainController::trans_to_reachable_matrix() {
+void MainController::transToReachableMatrix() {
     matrix.intoReachableMatrix();
 
     //打印邻接矩阵
     cout << "Reachable Matrix: \n";
-    cout<< matrix;
+    cout << matrix;
     cout << "\n";
+}
+
+vector<uint64_t> MainController::calculateBeginSet() {
+    vector<uint64_t> bs;
+    cout << "--------\n";
+    for (uint64_t s = 0; s < matrix.get_size(); s++) {
+        unordered_set<uint64_t> rs;
+        for (int i = 0; i < matrix.get_size(); i++) {
+            if (matrix[s][i] == 1) {
+                rs.insert(i);
+            }
+        }
+        cout << "R(" << s << "): ";
+        for (auto &elem: rs) {
+            cout << elem << " ";
+        }
+        cout << "\n";
+
+        unordered_set<uint64_t> as;
+        for (int i = 0; i < matrix.get_size(); i++) {
+            if (matrix[i][s] == 1) {
+                as.insert(i);
+            }
+        }
+        cout << "A(" << s << "): ";
+        for (auto &elem: as) {
+            cout << elem << " ";
+        }
+        cout << "\n";
+
+        unordered_set<uint64_t> cs;
+        // 取rs和as的交集
+        for (auto &elem: as) {
+            if (rs.count(elem) != 0) {
+                cs.insert(elem);
+            }
+        }
+        cout << "C(" << s << "): ";
+        for (auto &elem: cs) {
+            cout << elem << " ";
+        }
+        cout << "\n";
+
+        // 判断是否为Bs
+        if (as == cs) {
+            bs.emplace_back(s);
+            cout<< s <<" is in B(S)!\n";
+        }
+
+        cout << "--------\n";
+    }
+
+    cout<<"B(S): ";
+    for(auto& elem: bs){
+        cout<< elem <<" ";
+    }
+    cout<<"\n";
+    cout<<"\n";
+
+    return bs;
 }

@@ -12,6 +12,8 @@
 
 class BinarySquareMatrix {
 public:
+    std::vector<std::vector<char>> data;
+
     BinarySquareMatrix() = default;
 
     explicit BinarySquareMatrix(std::vector<std::vector<char>> data) : data(std::move(data)) {}
@@ -25,6 +27,13 @@ public:
      */
     void intoReachableMatrix();
 
+    std::vector<char>& operator[](size_t index) {
+        if (index >= data.size()) {
+            throw std::out_of_range("Index out of range");
+        }
+        return data[index];
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const BinarySquareMatrix& matrix) {
         for (const auto& row : matrix.data) {
             for (const auto& elem : row) {
@@ -34,9 +43,6 @@ public:
         }
         return os;
     }
-
-private:
-    std::vector<std::vector<char>> data;
 };
 
 
