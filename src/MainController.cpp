@@ -5,7 +5,6 @@
 #include "MainController.h"
 
 #include <iostream>
-#include <unordered_set>
 
 using namespace std;
 
@@ -13,7 +12,9 @@ void MainController::start() {
     inputMatrix();
     transToReachableMatrix();
     cout << "1. Divide Region\n";
-    calculateBeginSet();
+    vector<unordered_set<uint64_t>> rs_vec;
+    unordered_set<uint64_t> bs;
+    calculateBeginSet(rs_vec, bs);
 }
 
 void MainController::inputMatrix() {
@@ -52,11 +53,10 @@ void MainController::transToReachableMatrix() {
     cout << "\n";
 }
 
-vector<uint64_t> MainController::calculateBeginSet() {
-    vector<uint64_t> bs;
+void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, unordered_set<uint64_t> &bs) {
     cout << "--------\n";
     for (uint64_t s = 0; s < matrix.get_size(); s++) {
-        unordered_set<uint64_t> rs;
+        auto& rs = rs_vec[s];
         for (int i = 0; i < matrix.get_size(); i++) {
             if (matrix[s][i] == 1) {
                 rs.insert(i);
@@ -95,19 +95,17 @@ vector<uint64_t> MainController::calculateBeginSet() {
 
         // 判断是否为Bs
         if (as == cs) {
-            bs.emplace_back(s);
-            cout<< s <<" is in B(S)!\n";
+            bs.insert(s);
+            cout << s << " is in B(S)!\n";
         }
 
         cout << "--------\n";
     }
 
-    cout<<"B(S): ";
-    for(auto& elem: bs){
-        cout<< elem <<" ";
+    cout << "B(S): ";
+    for (auto &elem: bs) {
+        cout << elem << " ";
     }
-    cout<<"\n";
-    cout<<"\n";
-
-    return bs;
+    cout << "\n";
+    cout << "\n";
 }

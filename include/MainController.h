@@ -7,6 +7,8 @@
 
 #include "BinarySquareMatrix.h"
 
+#include <unordered_set>
+
 class MainController {
 public:
     void start();
@@ -26,9 +28,10 @@ private:
 
     /**
      * 计算起始集B(S)
-     * @return B(S)
+     * @param rs_vec vector of R(Si)
+     * @param bs B(S)
      */
-    std::vector<uint64_t> calculateBeginSet();
+    void calculateBeginSet(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::unordered_set<uint64_t> &bs);
 };
 
 
