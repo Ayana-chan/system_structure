@@ -26,6 +26,7 @@ void MainController::start() {
         divideLevel(level_vec[i], parts[i]);
     }
     cout<<"\n";
+    printLevelDividedMatrix();
 }
 
 void MainController::inputMatrix() {
@@ -221,7 +222,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
 
 
 void MainController::printPartDividedMatrix() {
-    cout << "Block Diagonal Matrix: \n";
+    cout << "Part Divided Matrix: \n";
     cout << "\\  ";
     for (auto &pc: parts) {
         for (auto &nodec: pc) {
@@ -245,5 +246,31 @@ void MainController::printPartDividedMatrix() {
 }
 
 void MainController::printLevelDividedMatrix() {
+    cout << "Level Divided Matrix: \n";
+    cout << "\\  ";
+    for(auto& partc: level_vec) {
+        for (auto &levelc: partc) {
+            for (auto &nodec: levelc) {
+                cout << nodec << " ";
+            }
+        }
+    }
+    cout << "\n";
 
+    for(auto& partr: level_vec) {
+        for (auto &levelr: partr) {
+            for (auto &noder: levelr) {
+                cout << noder << " |";
+                for(auto& partc: level_vec) {
+                    for (auto &levelc: partc) {
+                        for (auto &nodec: levelc) {
+                            cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                        }
+                    }
+                }
+                cout << "\n";
+            }
+        }
+    }
+    cout << "\n";
 }
