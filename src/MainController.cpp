@@ -13,12 +13,20 @@ using namespace std;
 void MainController::start() {
     inputMatrix();
     transToReachableMatrix();
+
     cout << "1. Divide Parts\n";
-    vector<unordered_set<uint64_t>> rs_vec;
+    vector<unordered_set<uint64_t>> rs_vec, cs_vec;
     vector<uint64_t> bs;
-    calculateBeginSet(rs_vec, bs);
+    calculateBeginSet(rs_vec, cs_vec, bs);
     vector<unordered_set<uint64_t>> parts = divideParts(rs_vec, bs);
     matrix.printBlockDiagonalMatrix(parts);
+
+    cout << "2. Divide Levels\n";
+    //每个part都是一个L队列，每个L都是一个集合
+//    auto level_vec = vector<vector<unordered_set<uint64_t>>>(parts.size());
+//    for (int i = 0; i < parts.size(); i++) {
+//        divideLevel(level_vec[i], parts[i]);
+//    }
 }
 
 void MainController::inputMatrix() {
@@ -57,13 +65,15 @@ void MainController::transToReachableMatrix() {
     cout << "\n";
 }
 
-void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
+void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, vector<unordered_set<uint64_t>> &cs_vec,
+                                       vector<uint64_t> &bs) {
     rs_vec.resize(matrix.get_size());
+    cs_vec.resize(matrix.get_size());
     bs.clear();
 
     cout << "--------\n";
     for (uint64_t s = 0; s < matrix.get_size(); s++) {
-        auto& rs = rs_vec[s];
+        auto &rs = rs_vec[s];
         rs = matrix.calculateRs(s);
         cout << "R(" << s << "): ";
         for (const auto &elem: rs_vec[s]) {
@@ -78,7 +88,8 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
         }
         cout << "\n";
 
-        auto cs = matrix.calculateCs_straight(s);
+        auto &cs = cs_vec[s];
+        cs = matrix.calculateCs_straight(s);
         cout << "C(" << s << "): ";
         for (const auto &elem: cs) {
             cout << elem << " ";
@@ -102,7 +113,8 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
     cout << "\n";
 }
 
-std::vector<std::unordered_set<uint64_t>> MainController::divideParts(vector<std::unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
+std::vector<std::unordered_set<uint64_t>>
+MainController::divideParts(vector<std::unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
     // 建立并查集
     UnionFind unionFind;
     for (auto &elem: bs) {
@@ -111,42 +123,56 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts(vector<std
 
     // 合并
     for (uint64_t i = 0; i < bs.size(); i++) {
-        auto& rs1 = rs_vec[bs[i]];
+        auto &rs1 = rs_vec[bs[i]];
         for (uint64_t j = i; j < bs.size(); j++) {
-            auto& rs2 = rs_vec[bs[j]];
-            bool intersect = !all_of(rs1.begin(),rs1.end(),
-                                    [&rs2](uint64_t elem) {return rs2.find(elem) == rs2.end();});
-            if(intersect){
-                unionFind.unite(bs[i],bs[j]);
+            auto &rs2 = rs_vec[bs[j]];
+            bool intersect = !all_of(rs1.begin(), rs1.end(),
+                                     [&rs2](uint64_t elem) { return rs2.find(elem) == rs2.end(); });
+            if (intersect) {
+                unionFind.unite(bs[i], bs[j]);
             }
         }
     }
 
     // 生成分区
     std::unordered_map<uint64_t, std::unordered_set<uint64_t>> classes_map;
-    for (const auto& elem : bs) {
+    for (const auto &elem : bs) {
         uint64_t root = unionFind.find(elem);
         auto &aim_rs = rs_vec[elem];
-        classes_map[root].insert(aim_rs.begin(),aim_rs.end());
+        classes_map[root].insert(aim_rs.begin(), aim_rs.end());
 //        cout<<"DEBUG: "<<root<<".insert("<<elem<<")\n";
     }
 
     std::vector<std::unordered_set<uint64_t>> parts;
-    for (const auto& entry : classes_map) {
+    for (const auto &entry : classes_map) {
         parts.push_back(entry.second);
 //        cout<<"DEBUG: "<<"parts.push_back entry size: "<<entry.second.size()<<"\n";
     }
 
     // 打印分区
-    cout<<"Parts: \n";
-    for(int i=0;i<parts.size();i++){
-        cout<<"P"<<i<<": ";
-        for(auto& elem: parts[i]){
-            cout<<elem<<" ";
+    cout << "Parts: \n";
+    for (int i = 0; i < parts.size(); i++) {
+        cout << "P" << i << ": ";
+        for (auto &elem: parts[i]) {
+            cout << elem << " ";
         }
-        cout<<"\n";
+        cout << "\n";
     }
-    cout<<"\n";
+    cout << "\n";
 
     return parts;
+}
+
+void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, const unordered_set<uint64_t> &part) {
+    // 求出所有rs和cs
+
+
+    // 尚未被划分等级的点
+    vector<uint64_t> discarded;
+    while (discarded.size() < part.size()) {
+        unordered_set<uint64_t> new_level;
+
+
+        levels.emplace_back(move(new_level));
+    }
 }
