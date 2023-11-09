@@ -15,6 +15,8 @@ public:
 
 private:
     BinarySquareMatrix matrix;
+    std::vector<std::unordered_set<uint64_t>> rs_vec, cs_vec;
+    std::vector<uint64_t> bs;
 
     /**
      * 输入矩阵数据，将矩阵构造到成员变量中
@@ -31,9 +33,7 @@ private:
      * @param rs_vec vector of R(Si)
      * @param bs B(S)
      */
-    void calculateBeginSet(std::vector<std::unordered_set<uint64_t>> &rs_vec,
-                           std::vector<std::unordered_set<uint64_t>> &cs_vec,
-                           std::vector<uint64_t> &bs);
+    void calculateBeginSet();
 
     /**
      * 划分区域
@@ -41,7 +41,7 @@ private:
      * @param bs
      * @return
      */
-    static std::vector<std::unordered_set<uint64_t>> divideParts(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::vector<uint64_t> &bs);
+    std::vector<std::unordered_set<uint64_t>> divideParts();
 
     void divideLevel(std::vector<std::unordered_set<uint64_t>> &levels, const std::unordered_set<uint64_t> &part);
 };
