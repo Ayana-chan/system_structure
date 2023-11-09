@@ -167,10 +167,16 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
     auto rest_node = part;
 
     while (!rest_node.empty()) {
-        cout<<"DEBUG: calculate level "<<level_count<<"\n";
+//        cout<<"DEBUG: calculate level "<<level_count<<"\n";
         unordered_set<uint64_t> new_level;
         // 找出所有cs=rs（无视discarded和非本part的点）的点
         for (auto &elem: part) {
+            // 点本身已经分配过了
+            if(rest_node.count(elem) == 0) {
+                continue;
+            }
+
+//            cout<<"DEBUG: check node: "<<elem<<"\n";
             auto cs = cs_vec[elem];
             auto rs = rs_vec[elem];
 
@@ -178,6 +184,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
             auto it = cs.begin();
             while(it!=cs.end()){
                 if(rest_node.count(*it) == 0){
+//                    cout<<"DEBUG: cs discard "<< *it <<"\n";
                     it = cs.erase(it);
                 }else{
                     it = next(it);
@@ -186,6 +193,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
             it = rs.begin();
             while(it!=rs.end()){
                 if(rest_node.count(*it) == 0){
+//                    cout<<"DEBUG: rs discard "<< *it <<"\n";
                     it = rs.erase(it);
                 }else{
                     it = next(it);
@@ -194,9 +202,14 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
 
             //检验相等
             if(cs == rs){
+//                cout<<"DEBUG: pass "<<elem<<"\n";
                 new_level.insert(elem);
-                rest_node.erase(elem);
             }
+        }
+
+        // 丢弃已分配的点
+        for(auto& elem: new_level){
+            rest_node.erase(elem);
         }
 
         // 打印
