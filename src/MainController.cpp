@@ -17,7 +17,7 @@ void MainController::start() {
     cout << "*** 1. Divide Parts\n";
     calculateBeginSet();
     divideParts();
-    printPartDividedMatrix(parts);
+    printPartDividedMatrix();
 
     cout << "*** 2. Divide Levels\n";
     level_vec.resize(parts.size());
@@ -220,7 +220,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
 }
 
 
-void MainController::printPartDividedMatrix(vector<unordered_set<uint64_t>> &parts) {
+void MainController::printPartDividedMatrix() {
     cout << "Block Diagonal Matrix: \n";
     cout << "\\  ";
     for (auto &pc: parts) {

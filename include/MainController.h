@@ -52,7 +52,7 @@ private:
      * 打印分区后的矩阵，是块对角矩阵
      * @param parts
      */
-    void printPartDividedMatrix(std::vector<std::unordered_set<uint64_t>> &parts);
+    void printPartDividedMatrix();
 
     void printLevelDividedMatrix();
 
