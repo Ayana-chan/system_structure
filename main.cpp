@@ -1,12 +1,12 @@
-#include "BinaryMatrix.h"
+#include "MainController.h"
 
 #include <iostream>
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    BinaryMatrix m;
-    m.mulAssignWithDiffCheck(m);
+    MainController mainController;
+    mainController.start();
 
     return 0;
 }

@@ -1,5 +1,6 @@
 target_sources(
     system_structure
     PUBLIC
-        BinaryMatrix.cpp
+        MainController.cpp
+        BinarySquareMatrix.cpp
 )
