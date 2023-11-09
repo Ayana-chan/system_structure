@@ -34,8 +34,6 @@ private:
     void calculateBeginSet(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::vector<uint64_t> &bs);
 
     static std::vector<std::unordered_set<uint64_t>> divideParts(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::vector<uint64_t> &bs);
-
-    void printBlockDiagonalMatrix(std::vector<std::unordered_set<uint64_t>> &parts);
 };
 
 

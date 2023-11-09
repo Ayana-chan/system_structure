@@ -18,7 +18,7 @@ void MainController::start() {
     vector<uint64_t> bs;
     calculateBeginSet(rs_vec, bs);
     vector<unordered_set<uint64_t>> parts = divideParts(rs_vec, bs);
-    printBlockDiagonalMatrix(parts);
+    matrix.printBlockDiagonalMatrix(parts);
 }
 
 void MainController::inputMatrix() {
@@ -63,39 +63,24 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
 
     cout << "--------\n";
     for (uint64_t s = 0; s < matrix.get_size(); s++) {
-        auto &rs = rs_vec[s];
-        for (int i = 0; i < matrix.get_size(); i++) {
-            if (matrix[s][i] == 1) {
-                rs.insert(i);
-            }
-        }
+        auto& rs = rs_vec[s];
+        rs = matrix.calculateRs(s);
         cout << "R(" << s << "): ";
-        for (auto &elem: rs) {
+        for (const auto &elem: rs_vec[s]) {
             cout << elem << " ";
         }
         cout << "\n";
 
-        unordered_set<uint64_t> as;
-        for (int i = 0; i < matrix.get_size(); i++) {
-            if (matrix[i][s] == 1) {
-                as.insert(i);
-            }
-        }
+        auto as = matrix.calculateAs(s);
         cout << "A(" << s << "): ";
-        for (auto &elem: as) {
+        for (const auto &elem: as) {
             cout << elem << " ";
         }
         cout << "\n";
 
-        unordered_set<uint64_t> cs;
-        // 取rs和as的交集
-        for (auto &elem: as) {
-            if (rs.count(elem) != 0) {
-                cs.insert(elem);
-            }
-        }
+        auto cs = matrix.calculateCs_straight(s);
         cout << "C(" << s << "): ";
-        for (auto &elem: cs) {
+        for (const auto &elem: cs) {
             cout << elem << " ";
         }
         cout << "\n";
@@ -164,28 +149,4 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts(vector<std
     cout<<"\n";
 
     return parts;
-}
-
-void MainController::printBlockDiagonalMatrix(vector<unordered_set<uint64_t>> &parts) {
-    cout << "Block Diagonal Matrix: \n";
-    cout<< "\\  ";
-    for(auto& pc: parts){
-        for(auto& nodec: pc){
-            cout<<nodec<<" ";
-        }
-    }
-    cout<<"\n";
-
-    for(auto& pr: parts){
-        for(auto& noder: pr){
-            cout<<noder<<" |";
-            for(auto& pc: parts){
-                for(auto& nodec: pc){
-                    cout<<static_cast<int>(matrix[noder][nodec])<<" ";
-                }
-            }
-            cout<<"\n";
-        }
-    }
-    cout<<"\n";
 }

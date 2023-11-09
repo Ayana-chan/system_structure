@@ -27,4 +27,58 @@ void BinarySquareMatrix::intoReachableMatrix() {
     }
 }
 
+void BinarySquareMatrix::printBlockDiagonalMatrix(vector<unordered_set<uint64_t>> &parts) {
+    cout << "Block Diagonal Matrix: \n";
+    cout << "\\  ";
+    for (auto &pc: parts) {
+        for (auto &nodec: pc) {
+            cout << nodec << " ";
+        }
+    }
+    cout << "\n";
+
+    for (auto &pr: parts) {
+        for (auto &noder: pr) {
+            cout << noder << " |";
+            for (auto &pc: parts) {
+                for (auto &nodec: pc) {
+                    cout << static_cast<int>(data[noder][nodec]) << " ";
+                }
+            }
+            cout << "\n";
+        }
+    }
+    cout << "\n";
+}
+
+unordered_set<uint64_t> BinarySquareMatrix::calculateRs(const uint64_t &s) {
+    unordered_set<uint64_t> rs;
+    for (int i = 0; i < get_size(); i++) {
+        if (data[s][i] == 1) {
+            rs.insert(i);
+        }
+    }
+    return rs;
+}
+
+unordered_set<uint64_t> BinarySquareMatrix::calculateAs(const uint64_t &s) {
+    unordered_set<uint64_t> as;
+    for (int i = 0; i < get_size(); i++) {
+        if (data[i][s] == 1) {
+            as.insert(i);
+        }
+    }
+    return as;
+}
+
+unordered_set<uint64_t> BinarySquareMatrix::calculateCs_straight(const uint64_t &s) {
+    unordered_set<uint64_t> cs;
+    for (int i = 0; i < get_size(); i++) {
+        if (data[i][s] == 1 && data[s][i] == 1) {
+            cs.insert(i);
+        }
+    }
+    return cs;
+}
+
 

@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 #include <ostream>
+#include <unordered_set>
 
 class BinarySquareMatrix {
 public:
@@ -27,16 +28,28 @@ public:
      */
     void intoReachableMatrix();
 
-    std::vector<char>& operator[](size_t index) {
+    std::unordered_set<uint64_t> calculateRs(const uint64_t &s);
+
+    std::unordered_set<uint64_t> calculateAs(const uint64_t &s);
+
+    std::unordered_set<uint64_t> calculateCs_straight(const uint64_t &s);
+
+    /**
+     * 打印分区后的矩阵，是块对角矩阵
+     * @param parts
+     */
+    void printBlockDiagonalMatrix(std::vector<std::unordered_set<uint64_t>> &parts);
+
+    std::vector<char> &operator[](size_t index) {
         if (index >= data.size()) {
             throw std::out_of_range("Index out of range");
         }
         return data[index];
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const BinarySquareMatrix& matrix) {
-        for (const auto& row : matrix.data) {
-            for (const auto& elem : row) {
+    friend std::ostream &operator<<(std::ostream &os, const BinarySquareMatrix &matrix) {
+        for (const auto &row : matrix.data) {
+            for (const auto &elem : row) {
                 os << static_cast<int>(elem) << ' ';
             }
             os << '\n';
