@@ -26,6 +26,7 @@ void MainController::start() {
         divideLevel(level_vec[i], parts[i]);
     }
     cout << "\n";
+    cout << "Level Divided Matrix: \n";
     printLevelDividedMatrixWithDiscard();
 
     cout << "*** 3. Get Skeleton Matrix\n";
@@ -35,10 +36,14 @@ void MainController::start() {
     clearBypassedRelation();
     cout << "-- After clear bypassed relation: \n";
     printLevelDividedMatrixWithDiscard();
+    clearSelfReachRelation();
+    cout << "-- After clear self reach relation: \n";
+    cout << "Success Get Skeleton Matrix: \n";
+    printLevelDividedMatrixWithDiscard();
 }
 
 void MainController::inputMatrix() {
-    cout << "Input Matrix.\n";
+    cout << "Please Input Matrix.\n";
     cout << "Example: node_num edge_num from1 to1 from2 to2\n";
     cout << "Notice: index start with 0\n";
 
@@ -59,6 +64,7 @@ void MainController::inputMatrix() {
     matrix = BinarySquareMatrix(data);
 
     //打印矩阵
+    cout << "\n";
     cout << "Get Matrix: \n";
     cout << matrix;
     cout << "\n";
@@ -228,70 +234,6 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
     }
 }
 
-
-void MainController::printPartDividedMatrix() {
-    cout << "Part Divided Matrix: \n";
-    cout << "\\  ";
-    for (auto &pc: parts) {
-        for (auto &nodec: pc) {
-            cout << nodec << " ";
-        }
-    }
-    cout << "\n";
-
-    for (auto &pr: parts) {
-        for (auto &noder: pr) {
-            cout << noder << " |";
-            for (auto &pc: parts) {
-                for (auto &nodec: pc) {
-                    cout << static_cast<int>(matrix[noder][nodec]) << " ";
-                }
-            }
-            cout << "\n";
-        }
-    }
-    cout << "\n";
-}
-
-void MainController::printLevelDividedMatrixWithDiscard() {
-    cout << "Level Divided Matrix: \n";
-    cout << "\\  ";
-    for (auto &partc: level_vec) {
-        for (auto &levelc: partc) {
-            for (auto &nodec: levelc) {
-                if(discarded_node.count(nodec) > 0){
-                    continue;
-                }
-                cout << nodec << " ";
-            }
-        }
-    }
-    cout << "\n";
-
-    for (auto &partr: level_vec) {
-        for (auto &levelr: partr) {
-            for (auto &noder: levelr) {
-                if(discarded_node.count(noder) > 0){
-                    continue;
-                }
-                cout << noder << " |";
-                for (auto &partc: level_vec) {
-                    for (auto &levelc: partc) {
-                        for (auto &nodec: levelc) {
-                            if(discarded_node.count(nodec) > 0){
-                                continue;
-                            }
-                            cout << static_cast<int>(matrix[noder][nodec]) << " ";
-                        }
-                    }
-                }
-                cout << "\n";
-            }
-        }
-    }
-    cout << "\n";
-}
-
 void MainController::discardStrongLinkedNode() {
     level_single_set.resize(level_vec.size());
     reverse_level_single_set.resize(level_vec.size());
@@ -305,7 +247,7 @@ void MainController::discardStrongLinkedNode() {
             reverse_level_single_set[p].insert({*it, l});
             it = next(it);
             while (it != level.end()) {
-                cout << "DEBUG: discard " << *it << "\n";
+//                cout << "DEBUG: discard " << *it << "\n";
                 discarded_node.insert(*it);
                 it = next(it);
             }
@@ -328,3 +270,88 @@ void MainController::clearBypassedRelation() {
         }
     }
 }
+
+void MainController::clearSelfReachRelation() {
+    for (int i = 0; i < matrix.get_size(); i++) {
+        matrix[i][i] = 0;
+    }
+}
+
+void MainController::printPartDividedMatrix() {
+    cout << "Part Divided Matrix: \n";
+    cout << "\\  ";
+    for (auto &pc: parts) {
+        for (auto &nodec: pc) {
+            cout << nodec << " ";
+        }
+    }
+    cout << "\n";
+
+    for (auto &pr: parts) {
+        for (auto &noder: pr) {
+            cout << noder << " |";
+            for (auto &pc: parts) {
+                for (auto &nodec: pc) {
+                    cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                }
+                cout << ". "; //part竖分界线
+            }
+            cout << "\n";
+        }
+
+        //part横分界线
+        cout<<"   ";
+        for (int _i = 0; _i < matrix.get_size() + parts.size(); _i++) {
+            cout << ". ";
+        }
+        cout << "\n";
+    }
+    cout << "\n";
+}
+
+void MainController::printLevelDividedMatrixWithDiscard() {
+    cout << "\\  ";
+    for (auto &partc: level_vec) {
+        for (auto &levelc: partc) {
+            for (auto &nodec: levelc) {
+                if (discarded_node.count(nodec) > 0) {
+                    continue;
+                }
+                cout << nodec << " ";
+            }
+        }
+    }
+    cout << "\n";
+
+    for (auto &partr: level_vec) {
+        for (auto &levelr: partr) {
+            for (auto &noder: levelr) {
+                if (discarded_node.count(noder) > 0) {
+                    continue;
+                }
+                cout << noder << " |";
+                for (auto &partc: level_vec) {
+                    for (auto &levelc: partc) {
+                        for (auto &nodec: levelc) {
+                            if (discarded_node.count(nodec) > 0) {
+                                continue;
+                            }
+                            cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                        }
+                    }
+                    cout << ". "; //part竖分界线
+                }
+                cout << "\n";
+            }
+        }
+        //part横分界线
+        cout<<"   ";
+        for (int _i = 0; _i < matrix.get_size() + parts.size() - discarded_node.size(); _i++) {
+            cout << ". ";
+        }
+        cout << "\n";
+    }
+    cout << "\n";
+}
+
+

@@ -38,16 +38,11 @@ private:
 
     /**
      * 计算起始集B(S)
-     * @param rs_vec vector of R(Si)
-     * @param bs B(S)
      */
     void calculateBeginSet();
 
     /**
      * 划分区域
-     * @param rs_vec
-     * @param bs
-     * @return
      */
     void divideParts();
 
@@ -64,13 +59,19 @@ private:
     void clearBypassedRelation();
 
     /**
+     * 丢弃对角线上的关系
+     */
+    void clearSelfReachRelation();
+
+    /**
      * 打印分区后的矩阵，是块对角矩阵
-     * @param parts
      */
     void printPartDividedMatrix();
 
+    /**
+     * 区域块三角矩阵
+     */
     void printLevelDividedMatrixWithDiscard();
-
 };
 
 
