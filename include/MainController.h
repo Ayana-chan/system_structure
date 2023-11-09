@@ -14,6 +14,9 @@ public:
 private:
     BinarySquareMatrix matrix;
 
+    /**
+     * 输入矩阵数据，将矩阵构造到成员变量中
+     */
     void input_matrix();
 };
 

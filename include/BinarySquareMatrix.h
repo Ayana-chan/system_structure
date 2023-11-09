@@ -8,12 +8,13 @@
 #include <cstdint>
 #include <utility>
 #include <vector>
+#include <ostream>
 
 class BinarySquareMatrix {
 public:
     BinarySquareMatrix() = default;
 
-    BinarySquareMatrix(std::vector<std::vector<int>> data) : data(std::move(data)) {}
+    explicit BinarySquareMatrix(std::vector<std::vector<char>> data) : data(std::move(data)) {}
 
     [[nodiscard]] uint64_t get_size() const;
 
@@ -24,8 +25,18 @@ public:
      */
     void intoReachableMatrix();
 
+    friend std::ostream& operator<<(std::ostream& os, const BinarySquareMatrix& matrix) {
+        for (const auto& row : matrix.data) {
+            for (const auto& elem : row) {
+                os << static_cast<int>(elem) << ' ';
+            }
+            os << '\n';
+        }
+        return os;
+    }
+
 private:
-    std::vector<std::vector<int>> data;
+    std::vector<std::vector<char>> data;
 };
 
 
