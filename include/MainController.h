@@ -31,7 +31,19 @@ private:
      * @param rs_vec vector of R(Si)
      * @param bs B(S)
      */
-    void calculateBeginSet(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::unordered_set<uint64_t> &bs);
+    void calculateBeginSet(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::vector<uint64_t> &bs);
+
+    static std::vector<std::unordered_set<uint64_t>> divideRegion(std::vector<std::unordered_set<uint64_t>> &rs_vec, std::vector<uint64_t> &bs);
+
+    static bool haveIntersection(const std::unordered_set<int>& set1, const std::unordered_set<int>& set2) {
+        for (const auto& element : set1) {
+            if (set2.find(element) != set2.end()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 };
 
 

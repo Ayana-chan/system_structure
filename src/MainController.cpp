@@ -3,8 +3,10 @@
 //
 
 #include "MainController.h"
+#include "UnionFind.h"
 
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,8 +15,9 @@ void MainController::start() {
     transToReachableMatrix();
     cout << "1. Divide Region\n";
     vector<unordered_set<uint64_t>> rs_vec;
-    unordered_set<uint64_t> bs;
+    vector<uint64_t> bs;
     calculateBeginSet(rs_vec, bs);
+    divideRegion(rs_vec, bs);
 }
 
 void MainController::inputMatrix() {
@@ -53,13 +56,13 @@ void MainController::transToReachableMatrix() {
     cout << "\n";
 }
 
-void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, unordered_set<uint64_t> &bs) {
+void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
     rs_vec.resize(matrix.get_size());
     bs.clear();
 
     cout << "--------\n";
     for (uint64_t s = 0; s < matrix.get_size(); s++) {
-        auto& rs = rs_vec[s];
+        auto &rs = rs_vec[s];
         for (int i = 0; i < matrix.get_size(); i++) {
             if (matrix[s][i] == 1) {
                 rs.insert(i);
@@ -98,7 +101,7 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
 
         // 判断是否为Bs
         if (as == cs) {
-            bs.insert(s);
+            bs.emplace_back(s);
             cout << s << " is in B(S)!\n";
         }
 
@@ -111,4 +114,49 @@ void MainController::calculateBeginSet(vector<unordered_set<uint64_t>> &rs_vec, 
     }
     cout << "\n";
     cout << "\n";
+}
+
+std::vector<std::unordered_set<uint64_t>> MainController::divideRegion(vector<std::unordered_set<uint64_t>> &rs_vec, vector<uint64_t> &bs) {
+    // 建立并查集
+    UnionFind unionFind;
+    for (auto &elem: bs) {
+        unionFind.makeSet(elem);
+    }
+
+    // 合并
+    for (uint64_t i = 0; i < bs.size(); i++) {
+        auto& rs1 = rs_vec[bs[i]];
+        for (uint64_t j = i; j < bs.size(); j++) {
+            auto& rs2 = rs_vec[bs[j]];
+            bool intersect = !all_of(rs1.begin(),rs1.end(),
+                                    [&rs2](uint64_t elem) {return rs2.find(elem) == rs2.end();});
+            if(intersect){
+                unionFind.unite(bs[i],bs[j]);
+            }
+        }
+    }
+
+    // 生成分区
+    std::unordered_map<uint64_t, std::unordered_set<uint64_t>> classes;
+    for (const auto& elem : bs) {
+        uint64_t root = unionFind.find(elem);
+        classes[root].insert(elem);
+    }
+    std::vector<std::unordered_set<uint64_t>> parts(classes.size());
+    for (const auto& entry : classes) {
+        parts.push_back(entry.second);
+    }
+
+    // 打印分区
+    cout<<"Parts: \n";
+    for(int i=0;i<parts.size();i++){
+        cout<<"P"<<i<<": ";
+        for(auto& elem: parts[i]){
+            cout<<elem<<" ";
+        }
+        cout<<"\n";
+    }
+    cout<<"\n";
+
+    return parts;
 }

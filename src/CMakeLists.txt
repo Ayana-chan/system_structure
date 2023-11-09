@@ -3,4 +3,6 @@ target_sources(
     PUBLIC
         MainController.cpp
         BinarySquareMatrix.cpp
+        UnionFind.cpp
 )
+
