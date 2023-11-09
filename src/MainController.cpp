@@ -17,7 +17,8 @@ void MainController::start() {
     vector<unordered_set<uint64_t>> rs_vec;
     vector<uint64_t> bs;
     calculateBeginSet(rs_vec, bs);
-    divideParts(rs_vec, bs);
+    vector<unordered_set<uint64_t>> parts = divideParts(rs_vec, bs);
+    printBlockDiagonalMatrix(parts);
 }
 
 void MainController::inputMatrix() {
@@ -163,4 +164,28 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts(vector<std
     cout<<"\n";
 
     return parts;
+}
+
+void MainController::printBlockDiagonalMatrix(vector<unordered_set<uint64_t>> &parts) {
+    cout << "Block Diagonal Matrix: \n";
+    cout<< "\\  ";
+    for(auto& pc: parts){
+        for(auto& nodec: pc){
+            cout<<nodec<<" ";
+        }
+    }
+    cout<<"\n";
+
+    for(auto& pr: parts){
+        for(auto& noder: pr){
+            cout<<noder<<" |";
+            for(auto& pc: parts){
+                for(auto& nodec: pc){
+                    cout<<static_cast<int>(matrix[noder][nodec])<<" ";
+                }
+            }
+            cout<<"\n";
+        }
+    }
+    cout<<"\n";
 }
