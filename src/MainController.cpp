@@ -16,7 +16,7 @@ void MainController::start() {
 
     cout << "*** 1. Divide Parts\n";
     calculateBeginSet();
-    vector<unordered_set<uint64_t>> parts = divideParts();
+    divideParts();
     printPartDividedMatrix(parts);
 
     cout << "*** 2. Divide Levels\n";
@@ -111,7 +111,7 @@ void MainController::calculateBeginSet() {
     cout << "\n";
 }
 
-std::vector<std::unordered_set<uint64_t>> MainController::divideParts() {
+void MainController::divideParts() {
     // 建立并查集
     UnionFind unionFind;
     for (auto &elem: bs) {
@@ -139,8 +139,6 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts() {
         classes_map[root].insert(aim_rs.begin(), aim_rs.end());
 //        cout<<"DEBUG: "<<root<<".insert("<<elem<<")\n";
     }
-
-    std::vector<std::unordered_set<uint64_t>> parts;
     for (const auto &entry : classes_map) {
         parts.push_back(entry.second);
 //        cout<<"DEBUG: "<<"parts.push_back entry size: "<<entry.second.size()<<"\n";
@@ -156,8 +154,6 @@ std::vector<std::unordered_set<uint64_t>> MainController::divideParts() {
         cout << "\n";
     }
     cout << "\n";
-
-    return parts;
 }
 
 void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, const unordered_set<uint64_t> &part) {

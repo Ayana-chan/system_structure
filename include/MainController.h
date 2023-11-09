@@ -17,6 +17,7 @@ private:
     BinarySquareMatrix matrix;
     std::vector<std::unordered_set<uint64_t>> rs_vec, cs_vec;
     std::vector<uint64_t> bs;
+    std::vector<std::unordered_set<uint64_t>> parts;
     //每个part都是一个L队列，每个L都是一个集合
     std::vector<std::vector<std::unordered_set<uint64_t>>> level_vec;
 
@@ -43,7 +44,7 @@ private:
      * @param bs
      * @return
      */
-    std::vector<std::unordered_set<uint64_t>> divideParts();
+    void divideParts();
 
     void divideLevel(std::vector<std::unordered_set<uint64_t>> &levels, const std::unordered_set<uint64_t> &part);
 
