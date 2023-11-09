@@ -22,11 +22,19 @@ void MainController::start() {
     cout << "*** 2. Divide Levels\n";
     level_vec.resize(parts.size());
     for (int i = 0; i < parts.size(); i++) {
-        cout<<"-- Part "<<i<<"'s Level: \n";
+        cout << "-- Part " << i << "'s Level: \n";
         divideLevel(level_vec[i], parts[i]);
     }
-    cout<<"\n";
-    printLevelDividedMatrix();
+    cout << "\n";
+    printLevelDividedMatrixWithDiscard();
+
+    cout << "*** 3. Get Skeleton Matrix\n";
+    discardStrongLinkedNode();
+    cout << "-- After discard strong linked node: \n";
+    printLevelDividedMatrixWithDiscard();
+    clearBypassedRelation();
+    cout << "-- After clear bypassed relation: \n";
+    printLevelDividedMatrixWithDiscard();
 }
 
 void MainController::inputMatrix() {
@@ -168,7 +176,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
         // 找出所有cs=rs（无视discarded和非本part的点）的点
         for (auto &elem: part) {
             // 点本身已经分配过了
-            if(rest_node.count(elem) == 0) {
+            if (rest_node.count(elem) == 0) {
                 continue;
             }
 
@@ -178,42 +186,42 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
 
             //剔除不考虑的点
             auto it = cs.begin();
-            while(it!=cs.end()){
-                if(rest_node.count(*it) == 0){
+            while (it != cs.end()) {
+                if (rest_node.count(*it) == 0) {
 //                    cout<<"DEBUG: cs discard "<< *it <<"\n";
                     it = cs.erase(it);
-                }else{
+                } else {
                     it = next(it);
                 }
             }
             it = rs.begin();
-            while(it!=rs.end()){
-                if(rest_node.count(*it) == 0){
+            while (it != rs.end()) {
+                if (rest_node.count(*it) == 0) {
 //                    cout<<"DEBUG: rs discard "<< *it <<"\n";
                     it = rs.erase(it);
-                }else{
+                } else {
                     it = next(it);
                 }
             }
 
             //检验相等
-            if(cs == rs){
+            if (cs == rs) {
 //                cout<<"DEBUG: pass "<<elem<<"\n";
                 new_level.insert(elem);
             }
         }
 
         // 丢弃已分配的点
-        for(auto& elem: new_level){
+        for (auto &elem: new_level) {
             rest_node.erase(elem);
         }
 
         // 打印
-        cout<<"Level "<<level_count<<": ";
-        for(auto& elem: new_level){
-            cout<<elem<<" ";
+        cout << "Level " << level_count << ": ";
+        for (auto &elem: new_level) {
+            cout << elem << " ";
         }
-        cout<<"\n";
+        cout << "\n";
 
         levels.emplace_back(move(new_level));
         ++level_count;
@@ -245,25 +253,34 @@ void MainController::printPartDividedMatrix() {
     cout << "\n";
 }
 
-void MainController::printLevelDividedMatrix() {
+void MainController::printLevelDividedMatrixWithDiscard() {
     cout << "Level Divided Matrix: \n";
     cout << "\\  ";
-    for(auto& partc: level_vec) {
+    for (auto &partc: level_vec) {
         for (auto &levelc: partc) {
             for (auto &nodec: levelc) {
+                if(discarded_node.count(nodec) > 0){
+                    continue;
+                }
                 cout << nodec << " ";
             }
         }
     }
     cout << "\n";
 
-    for(auto& partr: level_vec) {
+    for (auto &partr: level_vec) {
         for (auto &levelr: partr) {
             for (auto &noder: levelr) {
+                if(discarded_node.count(noder) > 0){
+                    continue;
+                }
                 cout << noder << " |";
-                for(auto& partc: level_vec) {
+                for (auto &partc: level_vec) {
                     for (auto &levelc: partc) {
                         for (auto &nodec: levelc) {
+                            if(discarded_node.count(nodec) > 0){
+                                continue;
+                            }
                             cout << static_cast<int>(matrix[noder][nodec]) << " ";
                         }
                     }
@@ -273,4 +290,41 @@ void MainController::printLevelDividedMatrix() {
         }
     }
     cout << "\n";
+}
+
+void MainController::discardStrongLinkedNode() {
+    level_single_set.resize(level_vec.size());
+    reverse_level_single_set.resize(level_vec.size());
+
+    for (int p = 0; p < level_vec.size(); p++) {
+        auto &_part = level_vec[p];
+        for (int l = 0; l < _part.size(); l++) {
+            auto &level = _part[l];
+            auto it = level.begin();
+            level_single_set[p].push_back(*it);
+            reverse_level_single_set[p].insert({*it, l});
+            it = next(it);
+            while (it != level.end()) {
+                cout << "DEBUG: discard " << *it << "\n";
+                discarded_node.insert(*it);
+                it = next(it);
+            }
+        }
+    }
+}
+
+void MainController::clearBypassedRelation() {
+    for (auto &_part: reverse_level_single_set) {
+        for (auto &r_pair: _part) {
+            auto &r = r_pair.first;
+            auto &r_level = r_pair.second;
+            for (auto &c_pair: _part) {
+                auto &c = c_pair.first;
+                auto &c_level = c_pair.second;
+                if (matrix[r][c] == 1 && abs(r_level - c_level) > 1) {
+                    matrix[r][c] = 0;
+                }
+            }
+        }
+    }
 }
