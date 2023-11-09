@@ -19,8 +19,9 @@ void BinarySquareMatrix::intoReachableMatrix() {
     //直接用Floyd算法
     for (size_t k = 0; k < m_size; ++k) {
         for (size_t r = 0; r < m_size; ++r) {
+            auto r_to_k = data[r][k]; //for cache friendly
             for (size_t c = 0; c < m_size; ++c) {
-                data[r][c] = data[r][c] || (data[r][k] && data[k][c]);
+                data[r][c] = data[r][c] || r == c || (r_to_k && data[k][c]);
             }
         }
     }

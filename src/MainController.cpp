@@ -10,6 +10,7 @@ using namespace std;
 
 void MainController::start() {
     input_matrix();
+    trans_to_reachable_matrix();
 }
 
 void MainController::input_matrix() {
@@ -34,7 +35,16 @@ void MainController::input_matrix() {
     matrix = BinarySquareMatrix(data);
 
     //打印矩阵
-    cout << "Success Construct Matrix: \n";
+    cout << "Get Matrix: \n";
+    cout<< matrix;
+    cout << "\n";
+}
+
+void MainController::trans_to_reachable_matrix() {
+    matrix.intoReachableMatrix();
+
+    //打印邻接矩阵
+    cout << "Reachable Matrix: \n";
     cout<< matrix;
     cout << "\n";
 }

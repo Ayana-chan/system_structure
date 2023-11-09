@@ -18,6 +18,11 @@ private:
      * 输入矩阵数据，将矩阵构造到成员变量中
      */
     void input_matrix();
+
+    /**
+     * 转为邻接矩阵
+     */
+    void trans_to_reachable_matrix();
 };
 
 
