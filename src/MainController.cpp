@@ -284,6 +284,7 @@ void MainController::printPartDividedMatrix() {
         for (auto &nodec: pc) {
             cout << nodec << " ";
         }
+        cout << "  "; //part竖分界线
     }
     cout << "\n";
 
@@ -320,6 +321,7 @@ void MainController::printLevelDividedMatrixWithDiscard() {
                 cout << nodec << " ";
             }
         }
+        cout << "  "; //part竖分界线
     }
     cout << "\n";
 

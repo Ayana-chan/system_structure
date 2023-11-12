@@ -1,4 +1,5 @@
-Input Matrix.
+D:\Code\C\system_structure\cmake-build-debug\system_structure.exe
+Please Input Matrix.
 Example: node_num edge_num from1 to1 from2 to2
 Notice: index start with 0
 7 6
@@ -8,6 +9,7 @@ Notice: index start with 0
 3 5
 5 3
 6 1
+
 Get Matrix:
 0 0 0 0 0 0 0
 1 0 0 0 0 0 0
@@ -65,7 +67,7 @@ P0: 0 1 6
 P1: 3 2 4 5
 
 Part Divided Matrix:
-\  0 1 6 3 2 4 5
+\  0 1 6   3 2 4 5
 0 |1 0 0 . 0 0 0 0 .
 1 |1 1 0 . 0 0 0 0 .
 6 |1 1 1 . 0 0 0 0 .
@@ -87,7 +89,7 @@ Level 1: 5 3
 Level 2: 2
 
 Level Divided Matrix:
-\  0 1 6 4 5 3 2
+\  0 1 6   4 5 3 2
 0 |1 0 0 . 0 0 0 0 .
 1 |1 1 0 . 0 0 0 0 .
 6 |1 1 1 . 0 0 0 0 .
@@ -100,7 +102,7 @@ Level Divided Matrix:
 
 *** 3. Get Skeleton Matrix
 -- After discard strong linked node:
-\  0 1 6 4 5 2
+\  0 1 6   4 5 2
 0 |1 0 0 . 0 0 0 .
 1 |1 1 0 . 0 0 0 .
 6 |1 1 1 . 0 0 0 .
@@ -111,7 +113,7 @@ Level Divided Matrix:
    . . . . . . . .
 
 -- After clear bypassed relation:
-\  0 1 6 4 5 2
+\  0 1 6   4 5 2
 0 |1 0 0 . 0 0 0 .
 1 |1 1 0 . 0 0 0 .
 6 |0 1 1 . 0 0 0 .
@@ -123,7 +125,7 @@ Level Divided Matrix:
 
 -- After clear self reach relation:
 Success Get Skeleton Matrix:
-\  0 1 6 4 5 2
+\  0 1 6   4 5 2
 0 |0 0 0 . 0 0 0 .
 1 |1 0 0 . 0 0 0 .
 6 |0 1 0 . 0 0 0 .
@@ -134,3 +136,4 @@ Success Get Skeleton Matrix:
    . . . . . . . .
 
 
+进程已结束，退出代码为 0
