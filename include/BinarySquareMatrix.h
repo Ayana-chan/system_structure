@@ -42,9 +42,24 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream &os, const BinarySquareMatrix &matrix) {
-        for (const auto &row : matrix.data) {
-            for (const auto &elem : row) {
-                os << static_cast<int>(elem) << ' ';
+        os << "\\   ";
+        for(uint64_t c = 0; c< matrix.get_size();c++){
+            if (c < 10) {
+                os << c << "  ";
+            } else {
+                os << c << " ";
+            }
+        }
+        os << "\n";
+
+        for(uint64_t r = 0; r< matrix.get_size();r++){
+            if (r < 10) {
+                os << r << "  |";
+            } else {
+                os << r << " |";
+            }
+            for (const auto &elem : matrix.data[r]) {
+                os << static_cast<int>(elem) << "  ";
             }
             os << '\n';
         }

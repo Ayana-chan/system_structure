@@ -301,9 +301,9 @@ void MainController::printPartDividedMatrix() {
             }
             for (auto &pc: parts) {
                 for (auto &nodec: pc) {
-                    cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                    cout << static_cast<int>(matrix[noder][nodec]) << "  ";
                 }
-                cout << ". "; //part竖分界线
+                cout << ".  "; //part竖分界线
             }
             cout << "\n";
         }
@@ -311,7 +311,7 @@ void MainController::printPartDividedMatrix() {
         //part横分界线
         cout << "    ";
         for (int _i = 0; _i < matrix.get_size() + parts.size(); _i++) {
-            cout << ". ";
+            cout << ".  ";
         }
         cout << "\n";
     }
