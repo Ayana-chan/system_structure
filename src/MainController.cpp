@@ -279,10 +279,14 @@ void MainController::clearSelfReachRelation() {
 
 void MainController::printPartDividedMatrix() {
     cout << "Part Divided Matrix: \n";
-    cout << "\\  ";
+    cout << "\\   ";
     for (auto &pc: parts) {
         for (auto &nodec: pc) {
-            cout << nodec << " ";
+            if (nodec < 10) {
+                cout << nodec << "  ";
+            } else {
+                cout << nodec << " ";
+            }
         }
         cout << "  "; //part竖分界线
     }
@@ -290,7 +294,11 @@ void MainController::printPartDividedMatrix() {
 
     for (auto &pr: parts) {
         for (auto &noder: pr) {
-            cout << noder << " |";
+            if (noder < 10) {
+                cout << noder << "  |";
+            } else {
+                cout << noder << " |";
+            }
             for (auto &pc: parts) {
                 for (auto &nodec: pc) {
                     cout << static_cast<int>(matrix[noder][nodec]) << " ";
@@ -301,7 +309,7 @@ void MainController::printPartDividedMatrix() {
         }
 
         //part横分界线
-        cout<<"   ";
+        cout << "    ";
         for (int _i = 0; _i < matrix.get_size() + parts.size(); _i++) {
             cout << ". ";
         }
@@ -311,17 +319,21 @@ void MainController::printPartDividedMatrix() {
 }
 
 void MainController::printLevelDividedMatrixWithDiscard() {
-    cout << "\\  ";
+    cout << "\\   ";
     for (auto &partc: level_vec) {
         for (auto &levelc: partc) {
             for (auto &nodec: levelc) {
                 if (discarded_node.count(nodec) > 0) {
                     continue;
                 }
-                cout << nodec << " ";
+                if (nodec < 10) {
+                    cout << nodec << "  ";
+                } else {
+                    cout << nodec << " ";
+                }
             }
         }
-        cout << "  "; //part竖分界线
+        cout << "   "; //part竖分界线
     }
     cout << "\n";
 
@@ -331,25 +343,30 @@ void MainController::printLevelDividedMatrixWithDiscard() {
                 if (discarded_node.count(noder) > 0) {
                     continue;
                 }
-                cout << noder << " |";
+                if (noder < 10) {
+                    cout << noder << "  |";
+                } else {
+                    cout << noder << " |";
+                }
                 for (auto &partc: level_vec) {
                     for (auto &levelc: partc) {
                         for (auto &nodec: levelc) {
                             if (discarded_node.count(nodec) > 0) {
                                 continue;
                             }
-                            cout << static_cast<int>(matrix[noder][nodec]) << " ";
+                            cout << static_cast<int>(matrix[noder][nodec]) << "  ";
                         }
                     }
-                    cout << ". "; //part竖分界线
+                    cout << ".  "; //part竖分界线
                 }
                 cout << "\n";
             }
         }
+
         //part横分界线
-        cout<<"   ";
+        cout << "    ";
         for (int _i = 0; _i < matrix.get_size() + parts.size() - discarded_node.size(); _i++) {
-            cout << ". ";
+            cout << ".  ";
         }
         cout << "\n";
     }
