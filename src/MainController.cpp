@@ -361,7 +361,7 @@ void MainController::printLevelDividedMatrixWithDiscard() {
 //        horizontal_len += p.size();
 //    }
 
-    cout << "\\   ";
+    cout << "\\       ";
     for (auto &partc: level_vec) {
         for (auto &levelc: partc) {
             for (auto &nodec: levelc) {
@@ -376,7 +376,7 @@ void MainController::printLevelDividedMatrixWithDiscard() {
             }
 //            cout << "   "; //level竖分界线
         }
-        cout << "       "; //part竖分界线
+        cout << "   "; //part竖分界线
     }
     cout << "\n";
 
