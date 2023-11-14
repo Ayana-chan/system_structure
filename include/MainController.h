@@ -21,10 +21,10 @@ private:
     std::vector<std::unordered_set<uint64_t>> parts;
     // 每个part都是一个L队列，每个L都是一个集合
     std::vector<std::vector<std::unordered_set<uint64_t>>> level_vec;
+    // 不分part地记录每个点对应的level
+    std::unordered_map<uint64_t, int> reverse_level_map;
+    // 被舍弃的点
     std::unordered_set<uint64_t> discarded_node;
-    // 丢弃强连接元素后，每个level只有一个元素
-    std::vector<std::vector<uint64_t>> level_single_set;
-    std::vector<std::unordered_map<uint64_t, int>> reverse_level_single_set;
 
     /**
      * 输入矩阵数据（边），将矩阵构造到成员变量中

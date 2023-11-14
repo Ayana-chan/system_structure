@@ -247,6 +247,7 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
             if (cs == rs) {
 //                cout<<"DEBUG: pass "<<elem<<"\n";
                 new_level.insert(elem);
+                reverse_level_map.insert({elem, level_count});
             }
         }
 
@@ -268,40 +269,41 @@ void MainController::divideLevel(vector<std::unordered_set<uint64_t>> &levels, c
 }
 
 void MainController::discardStrongLinkedNode() {
-    level_single_set.resize(level_vec.size());
-    reverse_level_single_set.resize(level_vec.size());
-
-    for (int p = 0; p < level_vec.size(); p++) {
-        auto &_part = level_vec[p];
-        for (int l = 0; l < _part.size(); l++) {
-            auto &level = _part[l];
-            auto it = level.begin();
-            level_single_set[p].push_back(*it);
-            reverse_level_single_set[p].insert({*it, l});
-            it = next(it);
-            while (it != level.end()) {
-//                cout << "DEBUG: discard " << *it << "\n";
-                discarded_node.insert(*it);
-                it = next(it);
+    //由于不同part之间不可能有强连接要素，因此可以全部暴力遍历
+    //但此处依然“节约”一下性能，即使计算量依然翻倍了
+    for(auto& _part: parts){
+        for(auto& r: _part){
+            for(auto& c:_part){
+                if(r == c){
+                    continue;
+                }
+                if(matrix[r][c] == 1 && matrix[c][r] == 1){
+                    auto& to_discard = max(r,c);
+                    if(discarded_node.count(to_discard) > 0){
+                        continue;
+                    }
+                    cout<<"Strong Linked Between "<<r<<" & "<<c<<", discard "<<to_discard<<"\n";
+                    discarded_node.insert(to_discard);
+                }
             }
         }
     }
 }
 
 void MainController::clearBypassedRelation() {
-    for (auto &_part: reverse_level_single_set) {
-        for (auto &r_pair: _part) {
+        for (auto &r_pair: reverse_level_map) {
             auto &r = r_pair.first;
             auto &r_level = r_pair.second;
-            for (auto &c_pair: _part) {
+            for (auto &c_pair: reverse_level_map) {
                 auto &c = c_pair.first;
                 auto &c_level = c_pair.second;
+//                cout<<"DEBUG: r_level: "<<r_level<<", c_level: "<<c_level<<"\n";
                 if (matrix[r][c] == 1 && abs(r_level - c_level) > 1) {
+                    cout<<"Clear Bypassed Relation ("<<r<<", "<<c<<")\n";
                     matrix[r][c] = 0;
                 }
             }
         }
-    }
 }
 
 void MainController::clearSelfReachRelation() {
