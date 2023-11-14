@@ -291,19 +291,20 @@ void MainController::discardStrongLinkedNode() {
 }
 
 void MainController::clearBypassedRelation() {
-        for (auto &r_pair: reverse_level_map) {
-            auto &r = r_pair.first;
-            auto &r_level = r_pair.second;
-            for (auto &c_pair: reverse_level_map) {
-                auto &c = c_pair.first;
-                auto &c_level = c_pair.second;
-//                cout<<"DEBUG: r_level: "<<r_level<<", c_level: "<<c_level<<"\n";
-                if (matrix[r][c] == 1 && abs(r_level - c_level) > 1) {
-                    cout<<"Clear Bypassed Relation ("<<r<<", "<<c<<")\n";
-                    matrix[r][c] = 0;
-                }
+    //不存在从高到低的越级关系
+    for (auto &r_pair: reverse_level_map) {
+        auto &r = r_pair.first;
+        auto &r_level = r_pair.second;
+        for (auto &c_pair: reverse_level_map) {
+            auto &c = c_pair.first;
+            auto &c_level = c_pair.second;
+//          cout<<"DEBUG: r_level: "<<r_level<<", c_level: "<<c_level<<"\n";
+            if (matrix[r][c] == 1 && abs(r_level - c_level) > 1) {
+                cout<<"Clear Bypassed Relation ("<<r<<", "<<c<<")\n";
+                matrix[r][c] = 0;
             }
         }
+    }
 }
 
 void MainController::clearSelfReachRelation() {
@@ -354,6 +355,12 @@ void MainController::printPartDividedMatrix() {
 }
 
 void MainController::printLevelDividedMatrixWithDiscard() {
+    // 计算横分界线长度
+    uint64_t horizontal_len = matrix.get_size() + parts.size() - discarded_node.size();
+//    for (auto &p: level_vec) {
+//        horizontal_len += p.size();
+//    }
+
     cout << "\\   ";
     for (auto &partc: level_vec) {
         for (auto &levelc: partc) {
@@ -367,8 +374,9 @@ void MainController::printLevelDividedMatrixWithDiscard() {
                     cout << nodec << " ";
                 }
             }
+//            cout << "   "; //level竖分界线
         }
-        cout << "   "; //part竖分界线
+        cout << "       "; //part竖分界线
     }
     cout << "\n";
 
@@ -378,6 +386,8 @@ void MainController::printLevelDividedMatrixWithDiscard() {
                 if (discarded_node.count(noder) > 0) {
                     continue;
                 }
+                auto& cur_level = reverse_level_map[noder];
+                cout<<"L"<<cur_level<<": ";
                 if (noder < 10) {
                     cout << noder << "  |";
                 } else {
@@ -391,17 +401,25 @@ void MainController::printLevelDividedMatrixWithDiscard() {
                             }
                             cout << static_cast<int>(matrix[noder][nodec]) << "  ";
                         }
+//                        cout << ".  "; //level竖分界线
                     }
-                    cout << ".  "; //part竖分界线
+                    cout << "|  "; //part竖分界线
                 }
                 cout << "\n";
             }
+
+            //level横分界线
+//            cout << "    ";
+//            for (int _i = 0; _i < horizontal_len; _i++) {
+//                cout << ".  ";
+//            }
+//            cout << "\n";
         }
 
         //part横分界线
-        cout << "    ";
-        for (int _i = 0; _i < matrix.get_size() + parts.size() - discarded_node.size(); _i++) {
-            cout << ".  ";
+        cout << "        ";
+        for (int _i = 0; _i < horizontal_len; _i++) {
+            cout << "-  ";
         }
         cout << "\n";
     }
