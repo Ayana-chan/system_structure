@@ -11,7 +11,8 @@
 using namespace std;
 
 void MainController::start() {
-    inputMatrix();
+//    inputMatrixByEdge();
+    inputMatrixByData();
     transToReachableMatrix();
 
     cout << "*** 1. Divide Parts\n";
@@ -42,9 +43,9 @@ void MainController::start() {
     printLevelDividedMatrixWithDiscard();
 }
 
-void MainController::inputMatrix() {
-    cout << "Please Input Matrix.\n";
-    cout << "Example: node_num edge_num from1 to1 from2 to2\n";
+void MainController::inputMatrixByEdge() {
+    cout << "Please Input Matrix by Edge.\n";
+    cout << "Example:\n node_num edge_num\n from1 to1\n from2 to2\n";
     cout << "Notice: index start with 0\n";
 
     uint64_t nodeNum;
@@ -58,7 +59,39 @@ void MainController::inputMatrix() {
         cin >> from;
         cin >> to;
 //        cout << "DEBUG: from " << from << " to " << to << "\n";
+        if (from >= nodeNum || to >= nodeNum) {
+            throw invalid_argument("Invalid Edge.");
+        }
         data[from][to] = 1;
+    }
+
+    matrix = BinarySquareMatrix(data);
+
+    //打印矩阵
+    cout << "\n";
+    cout << "Get Matrix: \n";
+    cout << matrix;
+    cout << "\n";
+}
+
+void MainController::inputMatrixByData() {
+    cout << "Please Input Matrix by Data.\n";
+    cout << "Example:\n node_num\n p00 p01\n p10 p11\n";
+    cout << "Notice: index start with 0\n";
+
+    uint64_t nodeNum;
+    cin >> nodeNum;
+    auto data(vector<vector<char>>(nodeNum, vector<char>(nodeNum, 0)));
+
+    int input;
+    for (int r = 0; r < nodeNum; r++) {
+        for (int c = 0; c < nodeNum; c++) {
+            cin >> input;
+            if (!(input == 0 || input == 1)) {
+                throw invalid_argument("Matrix data can only be 0 or 1.");
+            }
+            data[r][c] = static_cast<char>(input);
+        }
     }
 
     matrix = BinarySquareMatrix(data);
@@ -372,5 +405,7 @@ void MainController::printLevelDividedMatrixWithDiscard() {
     }
     cout << "\n";
 }
+
+
 
 

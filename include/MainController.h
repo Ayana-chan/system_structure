@@ -27,9 +27,14 @@ private:
     std::vector<std::unordered_map<uint64_t, int>> reverse_level_single_set;
 
     /**
-     * 输入矩阵数据，将矩阵构造到成员变量中
+     * 输入矩阵数据（边），将矩阵构造到成员变量中
      */
-    void inputMatrix();
+    void inputMatrixByEdge();
+
+    /**
+     * 输入矩阵数据（每个点的值），将矩阵构造到成员变量中
+     */
+    void inputMatrixByData();
 
     /**
      * 转为邻接矩阵
